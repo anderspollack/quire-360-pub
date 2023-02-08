@@ -1,0 +1,13 @@
+object_display_order:
+  - note
+
+object_list:
+
+  - id: 1
+    note: "An entry page with serveral different IIIF images in the lightbox image viewer."
+    figure:
+      - id: "zoom"
+      - id: "radio-layers"
+      - id: "checkbox-annotations"
+      - id: "rotating"
+      - id: "rotating-annotation"

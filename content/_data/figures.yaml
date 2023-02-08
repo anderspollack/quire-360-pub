@@ -1,0 +1,83 @@
+figure_list:
+
+  - id: "zoom"
+    src: figures/irises.jpg
+    label: "Figure 1"
+    caption: "*Irises*, 1889, Vincent van Gogh (Dutch, 1853 - 1890). Oil on canvas, 74.3 × 94.3 cm (29 1/4 × 37 1/8 in.)."
+    credit: The J. Paul Getty Museum, Los Angeles, 90.PA.20
+    download: true
+    zoom: true
+
+  - id: "radio-layers"
+    label: "Figure 2"
+    caption: "Mummy Portrait of a Woman, A.D. 100, attributed to the Isidora Master (Romano-Egyptian, active 100 - 125). Encaustic on linden wood; gilt; linen, 48 × 36 × 12.8 cm (18 7/8 × 14 3/16 × 5 1/16 in.)."
+    credit: "The J. Paul Getty Museum, Villa Collection, Malibu, California, 81.AP.42"
+    annotations:
+      - input: radio
+        items:
+          - src: "figures/mummy/normal.jpg"
+            label: "Normal Light"
+          - src: "figures/mummy/infrared.jpg"
+            label: "Infrared"
+          - src: "figures/mummy/x-ray.jpg"
+            label: "X-Radiograph"
+          - src: "figures/mummy/raking.jpg"
+            label: "Raking Light"
+          - src: "figures/mummy/uv.jpg"
+            label: "Ultraviolet"
+
+  - id: "checkbox-annotations"
+    src: "figures/lange-layers/base.jpg"
+    zoom: true
+    label: "Figure 3"
+    caption: "This version of the print from the Library of Congress Prints and Photographs Division is mounted on paper board and includes an original FSA label. Note too the thumb seen in the lower right corner. It is also visible in the Getty‘s print, but Lange’s negative was later retouched to remove the thumb and in later prints, it is only a ghostly shadow."
+    annotations:
+      - input: checkbox
+        items:
+          - src: "figures/lange-layers/original-label.png"
+            selected: true
+          - src: "figures/lange-layers/additional-label.png"
+          - src: "figures/lange-layers/scratches.png"
+          - src: "figures/lange-layers/thumb.png"
+            selected: true
+
+  - id: "rotating"
+    zoom: true
+    label: "Figure 4"
+    caption: "Head of a Woman, 350–300 B.C., Unknown (Greek (Sicilian)). Terracotta with white slip and polychromy (pink, red, dark pink, white, purple), 28.8 × 19.1 × 15.1 cm (11 5/16 × 7 1/2 × 5 15/16 in.)."
+    credit: "The J. Paul Getty Museum, Villa Collection, Malibu, California, Gift of Dr. Max Gerchik, 76.AD.34"
+    sequence:
+      - id: "figures/terracotta/"
+        behavior:
+          - continuous
+          - sequence
+        start: 171.jpg
+
+  - id: "rotating-annotation"
+    label: "Figure 5"
+    caption: "Fountain, 1661–1663, Possibly by Jean Leroy (French, master 1625). Silver, 65.1 × 35.9 × 36.2 cm, 11250 g (25 5/8 × 14 1/8 × 14 1/4 in., 361.6954 ozt.)."
+    credit: "The J. Paul Getty Museum, Los Angeles, 82.DG.17"
+    sequence:
+      - id: "figures/fountain/"
+        behavior: [ "continuous", "sequence" ]
+        regex: /^fountain02_\d{4}$/
+    annotations:
+      - input: checkbox
+        items:
+          - src: "figures/fountain/collar.png"
+          - src: "figures/fountain/skirt.png"
+      - input: radio
+        items:
+          - src: "figures/fountain/xray-front.jpg"
+            target: "figures/fountain/fountain02_00000.png"
+            label: "X-Ray View: Front"
+          - src: "figures/fountain/xray-left.jpg"
+            target: "figures/fountain/fountain02_00048.png"
+            label: "Left"
+          - src: "figures/fountain/xray-back.jpg"
+            target: "figures/fountain/fountain02_00092.png"
+            label: "Back"
+          - src: "figures/fountain/xray-right.jpg"
+            target: "figures/fountain/fountain02_00136.png"
+            label: "Right"
+
