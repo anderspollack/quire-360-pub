@@ -4,7 +4,12 @@ const AnnotationFactory = require('../annotation/factory')
 const Manifest = require('../iiif/manifest')
 const path = require('path')
 const sharp = require('sharp')
-const { isCanvas, isImageService } = require('../helpers')
+const {
+  getSequenceFiles,
+  isCanvas,
+  isImageService,
+  isSequence
+} = require('../helpers')
 
 const logger = chalkFactory('Figures:Figure', 'DEBUG')
 
@@ -61,12 +66,17 @@ module.exports = class Figure {
     this.iiifConfig = iiifConfig
     this.isCanvas = isCanvas(data)
     this.isImageService = isImageService(data)
+    this.isSequence = isSequence(data)
     this.label = label
     this.manifestId = manifestId
     this.mediaType = mediaType || defaults.mediaType
     this.mediaId = mediaId
     this.outputDir = outputDir
     this.processImage = imageProcessor
+    if (this.isSequence) {
+      this.sequenceDir = data.sequence[0].id
+      this.sequenceFiles = getSequenceFiles(data, iiifConfig)
+      this.sequenceRegex = data.sequence[0].regex
     this.src = src
     this.zoom = zoom
   }
@@ -190,7 +200,11 @@ module.exports = class Figure {
 
     await this.calcCanvasDimensions()
     await this.processAnnotationImages()
-    await this.processFigureImage()
+    if (this.isSequence) {
+      await this.processFigureSequence()
+    } else {
+      await this.processFigureImage()
+    }
     await this.createManifest()
 
     return { errors: this.errors }
@@ -223,6 +237,19 @@ module.exports = class Figure {
       transformations
     })
     if (errors) this.errors = this.errors.concat(errors)
+  }
+
+  async processFigureSequence() {
+    if (!this.isSequence || !this.sequenceFiles) return
+    const results = await Promise.all(this.sequenceFiles.map((sequenceItemFilename) => {
+      logger.debug(`processing sequence image ${sequenceItemFilename}`)
+      const inputPath = path.join(this.sequenceDir, sequenceItemFilename)
+      return this.processImage(inputPath, this.outputDir, {
+        tile: true
+      })
+    }))
+    const errors = results.flatMap(({ errors }) => errors || [])
+    if (errors.length) this.errors = this.errors.concat(errors)
   }
 
   /**
