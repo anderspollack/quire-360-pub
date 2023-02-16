@@ -47,7 +47,7 @@ module.exports = class SequenceItem {
     }
 
     /**
-     * Create image service for annotation image if it is a JPG and
+     * Create image service for sequence item image if it is a JPG and
      * the figure has zoom enabled
      *
      * Note: Currently only JPG image services are supported by
