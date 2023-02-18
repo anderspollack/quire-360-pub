@@ -1,3 +1,4 @@
+const path = require('path')
 const SequenceItem = require('./index')
 
 /**
@@ -23,16 +24,17 @@ module.exports = class SequenceFactory {
   }
 
   sequenceItem(sequenceItemFilename) {
-    const { label } = this.figure.data
-    const src = path.join(this.figure.sequenceDir, sequenceItemFilename)
-    console.warn(
-      'SEQUENCE ITEMS IN THE FACTORY',
-      {
-        items: [new SequenceItem(this.figure, { label, src })]
-      }
-    )
+    const { annotations, data, sequenceDir } = this.figure
+    const { label } = data
+    const src = path.join(sequenceDir, sequenceItemFilename)
+    const sequenceItemImage = new SequenceItem(this.figure, { label, src })
+    const annotationItems = annotations
+      ? annotations.flatMap(({ items }) => items)
+      : []
+    const sequenceItemAnnotations = annotationItems
+      .filter(({ target }) => target && target === src)
     return {
-      items: [new SequenceItem(this.figure, { label, src })]
+      items: [sequenceItemImage, ...sequenceItemAnnotations]
     }
   }
 }
