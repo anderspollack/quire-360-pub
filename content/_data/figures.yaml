@@ -27,18 +27,18 @@ figure_list:
             label: "Ultraviolet"
 
   - id: "checkbox-annotations"
-    src: "figures/lange-layers/base.jpg"
+    src: "figures/lange/base.jpg"
     zoom: true
     label: "Figure 3"
     caption: "This version of the print from the Library of Congress Prints and Photographs Division is mounted on paper board and includes an original FSA label. Note too the thumb seen in the lower right corner. It is also visible in the Getty‘s print, but Lange’s negative was later retouched to remove the thumb and in later prints, it is only a ghostly shadow."
     annotations:
       - input: checkbox
         items:
-          - src: "figures/lange-layers/original-label.png"
+          - src: "figures/lange/original-label.png"
             selected: true
-          - src: "figures/lange-layers/additional-label.png"
-          - src: "figures/lange-layers/scratches.png"
-          - src: "figures/lange-layers/thumb.png"
+          - src: "figures/lange/additional-label.png"
+          - src: "figures/lange/scratches.png"
+          - src: "figures/lange/thumb.png"
             selected: true
 
   - id: "rotating"
@@ -46,7 +46,7 @@ figure_list:
     label: "Figure 4"
     caption: "Head of a Woman, 350–300 B.C., Unknown (Greek (Sicilian)). Terracotta with white slip and polychromy (pink, red, dark pink, white, purple), 28.8 × 19.1 × 15.1 cm (11 5/16 × 7 1/2 × 5 15/16 in.)."
     credit: "The J. Paul Getty Museum, Villa Collection, Malibu, California, Gift of Dr. Max Gerchik, 76.AD.34"
-    sequence:
+    sequences:
       - id: "figures/terracotta/"
         behavior:
           - continuous
@@ -57,10 +57,10 @@ figure_list:
     label: "Figure 5"
     caption: "Fountain, 1661–1663, Possibly by Jean Leroy (French, master 1625). Silver, 65.1 × 35.9 × 36.2 cm, 11250 g (25 5/8 × 14 1/8 × 14 1/4 in., 361.6954 ozt.)."
     credit: "The J. Paul Getty Museum, Los Angeles, 82.DG.17"
-    sequence:
+    sequences:
       - id: "figures/fountain/"
         behavior: [ "continuous", "sequence" ]
-        regex: /^fountain02_\d{4}$/
+        regex: /^fountain02_\d{5}\.png$/
     annotations:
       - input: checkbox
         items:
