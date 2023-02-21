@@ -70,14 +70,44 @@ module.exports = class Manifest {
     if (!this.figure.sequence) return
     return this.figure.sequence
       .map(({ items }) => {
-        return this.createAnnotation({
+        // return this.createAnnotation({
+        //   body: {
+        //     items: items.map((item) => this.createAnnotationBody(item)),
+        //     type: 'Choice'
+        //   },
+        //   id: 'sequence-item',
+        //   motivation: 'painting'
+        // })
+
+        const canvasId = path.join(this.figure.canvasId, items[0].id)
+        return {
           body: {
-            items: items.map((item) => this.createAnnotationBody(item)),
+            items: items.map(({ format, info, label, src, uri }) => {
+              const { ext } = path.parse(src)
+              return {
+                format,
+                height: this.figure.canvasHeight,
+                id: uri,
+                label: { en: [label] },
+                type: 'Image',
+                service: info && [
+                  {
+                    '@context': 'http://iiif.io/api/image/2/context.json',
+                    '@id': info,
+                    profile: 'level0',
+                    protocol: 'http://iiif.io/api/image'
+                  }
+                ],
+                width: this.figure.canvasWidth
+              }
+            }),
             type: 'Choice'
           },
-          id: 'sequence-item',
-          motivation: 'painting'
-        })
+          id: path.join(canvasId, 'sequence-item'),
+          motivation: 'painting',
+          target: canvasId,
+          type: 'Annotation'
+        }
       })
   }
 
@@ -126,12 +156,17 @@ module.exports = class Manifest {
       // TODO Refactor?, this branching logic seems awkward...
       if (this.figure.isSequence) {
         this.sequence.forEach((item) => {
-          const { base: sequenceItemBasename } = path.parse(item.id)
-          const canvasId = path.join(this.figure.canvasId, sequenceItemBasename)
+          const sequenceItemChoices = item.body.items
+          const sequenceItemBaseImage = sequenceItemChoices[0]
+          const canvasId = sequenceItemBaseImage.id
           manifest.createCanvas(canvasId, (canvas) => {
             canvas.height = this.figure.canvasHeight
             canvas.width = this.figure.canvasWidth
-            canvas.createAnnotation(item.id, item)
+            sequenceItemChoices.forEach((choice) => {
+              console.warn('THE SEQUENCE ITEM CHOICES', item.id, item, choice)
+            })
+            // Uncommenting line below prevents sequence manifests from writing, presumably these annotations are malformed in some way :(
+            // canvas.createAnnotation(item.id, item)
           })
         })
       } else {
@@ -144,6 +179,7 @@ module.exports = class Manifest {
             })
           }
           if (this.choices) {
+            console.warn('THE CHOICES', this.choices.id, this.choices)
             canvas.createAnnotation(this.choices.id, this.choices)
           }
         })
