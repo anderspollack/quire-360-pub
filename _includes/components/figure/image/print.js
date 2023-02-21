@@ -28,6 +28,10 @@ module.exports = function(eleventyConfig) {
       case figure.isCanvas || figure.isImageService:
         imageSrc = figure.printImage
         break
+      // TODO implement `printImage` in sequence figures
+      case figure.isSequence:
+        imageSrc = ''
+        break
       default:
         imageSrc = src.startsWith('http')
           ? src

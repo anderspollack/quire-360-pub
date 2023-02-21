@@ -13,13 +13,16 @@ module.exports = function (eleventyConfig) {
   const { imageDir } = eleventyConfig.globalData.config.figures
 
   return function (figure) {
-    const { isCanvas, isImageService } = figure
+    const { isCanvas, isImageService, isSequence } = figure
 
     switch (true) {
       case isCanvas:
         return canvasPanel(figure)
       case isImageService:
         return imageService(figure)
+      // TODO implement imageSequence component
+      case isSequence:
+        return ''
       default:
         return imageTag(figure)
     }
