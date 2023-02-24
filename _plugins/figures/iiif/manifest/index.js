@@ -65,42 +65,35 @@ module.exports = class Manifest {
     })
   }
 
-  // TODO create annotations for annotation targets matching sequence item
-  get sequence() {
-    if (!this.figure.sequence) return
-    return this.figure.sequence
-      .map(({ items }) => {
-        // return this.createAnnotation({
-        //   body: {
-        //     items: items.map((item) => this.createAnnotationBody(item)),
-        //     type: 'Choice'
-        //   },
-        //   id: 'sequence-item',
-        //   motivation: 'painting'
-        // })
-
-        const canvasId = path.join(this.figure.canvasId, items[0].id)
+  get sequenceItems() {
+    if (!this.figure.sequences || !this.figure.sequences.length) return
+    return this
+      .figure.sequences
+      .flatMap(({ items }) => items)
+      .map((item) => {
+        const canvasId = path.join(this.figure.canvasId, item.id)
+        const baseImage = ({ format, info, label, src, uri }) => {
+          const { ext } = path.parse(src)
+          return {
+            format,
+            height: this.figure.canvasHeight,
+            id: uri,
+            label: { en: [label] },
+            type: 'Image',
+            service: info && [
+              {
+                '@context': 'http://iiif.io/api/image/2/context.json',
+                '@id': info,
+                profile: 'level0',
+                protocol: 'http://iiif.io/api/image'
+              }
+            ],
+            width: this.figure.canvasWidth
+          }
+        }
         return {
           body: {
-            items: items.map(({ format, info, label, src, uri }) => {
-              const { ext } = path.parse(src)
-              return {
-                format,
-                height: this.figure.canvasHeight,
-                id: uri,
-                label: { en: [label] },
-                type: 'Image',
-                service: info && [
-                  {
-                    '@context': 'http://iiif.io/api/image/2/context.json',
-                    '@id': info,
-                    profile: 'level0',
-                    protocol: 'http://iiif.io/api/image'
-                  }
-                ],
-                width: this.figure.canvasWidth
-              }
-            }),
+            items: [baseImage(item)],
             type: 'Choice'
           },
           id: path.join(canvasId, 'sequence-item'),
@@ -155,18 +148,14 @@ module.exports = class Manifest {
       manifest.addLabel(this.figure.label, this.locale)
       // TODO Refactor?, this branching logic seems awkward...
       if (this.figure.isSequence) {
-        this.sequence.forEach((item) => {
+        this.sequenceItems.forEach((item) => {
           const sequenceItemChoices = item.body.items
-          const sequenceItemBaseImage = sequenceItemChoices[0]
-          const canvasId = sequenceItemBaseImage.id
+          const canvasId = item.target
           manifest.createCanvas(canvasId, (canvas) => {
             canvas.height = this.figure.canvasHeight
             canvas.width = this.figure.canvasWidth
-            sequenceItemChoices.forEach((choice) => {
-              console.warn('THE SEQUENCE ITEM CHOICES', item.id, item, choice)
-            })
-            // Uncommenting line below prevents sequence manifests from writing, presumably these annotations are malformed in some way :(
-            // canvas.createAnnotation(item.id, item)
+            // TODO figure out why each annotation 'Image' is always the last sequence item...
+            canvas.createAnnotation(item.id, item)
           })
         })
       } else {
@@ -179,7 +168,6 @@ module.exports = class Manifest {
             })
           }
           if (this.choices) {
-            console.warn('THE CHOICES', this.choices.id, this.choices)
             canvas.createAnnotation(this.choices.id, this.choices)
           }
         })
