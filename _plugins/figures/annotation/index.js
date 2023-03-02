@@ -26,7 +26,8 @@ const logger = chalkFactory('Figures:Annotation')
  */
 module.exports = class Annotation {
   constructor(figure, data) {
-    const { iiifConfig, outputDir } = figure
+    const { iiifConfig, outputDir, zoom } = figure
+    const { baseURI, tilesDirName } = iiifConfig
     const { label, selected, src, target, text } = data
     const { base, ext, name } = src ? path.parse(src) : {}
 
@@ -55,19 +56,19 @@ module.exports = class Annotation {
      * Note: Currently only JPG image services are supported by 
      * canvas-panel/image-service tags
      */
-    const isImageService = !!figure.zoom && ext === '.jpg'
+    const isImageService = !!zoom && ext === '.jpg'
     const info = () => {
       if (!isImageService) return
-      const tilesPath = path.join(outputDir, name, iiifConfig.tilesDirName)
+      const tilesPath = path.join(outputDir, name, tilesDirName)
       const infoPath = path.join(tilesPath, 'info.json')
-      return new URL(infoPath, iiifConfig.baseURI).toString()
+      return new URL(infoPath, baseURI).toString()
     }
 
     const uri = () => {
       const filepath = isImageService
         ? info()
         : path.join(outputDir, base)
-      return new URL(filepath, iiifConfig.baseURI).toString()
+      return new URL(filepath, baseURI).toString()
     }
 
     this.format = text && !src ? 'text/plain' : mime.lookup(src)
@@ -80,7 +81,7 @@ module.exports = class Annotation {
     this.src = src
     this.target = target
     this.text = text
-    this.type = figure.src || target || text ? 'annotation' : 'choice'
+    this.type = src || target || text ? 'annotation' : 'choice'
     this.uri = uri()
   }
 }
