@@ -9,6 +9,7 @@
 module.exports = function (eleventyConfig) {
   const canvasPanel = eleventyConfig.getFilter('canvasPanel')
   const imageService = eleventyConfig.getFilter('imageService')
+  const sequencePanel = eleventyConfig.getFilter('sequencePanel')
   const imageTag = eleventyConfig.getFilter('imageTag')
   const { imageDir } = eleventyConfig.globalData.config.figures
 
@@ -16,13 +17,12 @@ module.exports = function (eleventyConfig) {
     const { isCanvas, isImageService, isSequence } = figure
 
     switch (true) {
+      case isSequence:
+        return sequencePanel(figure)
       case isCanvas:
         return canvasPanel(figure)
       case isImageService:
         return imageService(figure)
-      // TODO implement imageSequence component
-      case isSequence:
-        return ''
       default:
         return imageTag(figure)
     }
