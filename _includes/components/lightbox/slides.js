@@ -22,10 +22,13 @@ module.exports = function(eleventyConfig) {
   return async function(figures) {
     if (!figures) return ''
 
-    figures = figures.map((figure) => ({
-      preset: 'zoom',
-      ...figure
-    }))
+    // TODO 'figure' out why the sequence figures are undefined
+    figures = figures
+      .filter(figure => figure.src)
+      .map((figure) => ({
+        preset: 'zoom',
+        ...figure
+      }))
 
     const slideElement = async (figure) => {
       const {
