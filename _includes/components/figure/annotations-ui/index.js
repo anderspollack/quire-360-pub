@@ -21,15 +21,16 @@ module.exports = function(eleventyConfig) {
       const nameParts = [figure.id, index]
       if (lightbox) nameParts.unshift('lightbox')
       const name = nameParts.join('-')
-      const options = 
-        items.map((annotation, index) => figureOption({ annotation, index, input, name }))
+      const options = items
+        .map((annotation, index) => figureOption({ annotation, index, input, name }))
+        .join('\n')
       return html`
         <fieldset class="annotations-ui">
           <legend>${title}</legend>
           ${options}
         </fieldset>
       `
-    })
+    }).join('\n')
     return html`<form>${fieldsets}</form>`
   }
 }
