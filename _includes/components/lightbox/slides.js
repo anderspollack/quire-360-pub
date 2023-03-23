@@ -22,13 +22,10 @@ module.exports = function(eleventyConfig) {
   return async function(figures) {
     if (!figures) return ''
 
-    // TODO 'figure' out why the sequence figures are undefined
-    figures = figures
-      .filter(figure => figure.src)
-      .map((figure) => ({
-        preset: 'zoom',
-        ...figure
-      }))
+    figures = figures.map((figure) => ({
+      preset: 'zoom',
+      ...figure
+    }))
 
     const slideElement = async (figure) => {
       const {
@@ -36,6 +33,7 @@ module.exports = function(eleventyConfig) {
         caption,
         credit,
         id,
+        isSequence,
         label,
         mediaType
       } = figure
@@ -71,6 +69,9 @@ module.exports = function(eleventyConfig) {
           </div>
         `
         : ''
+      const annotationsElement = !isSequence
+        ? annotationsUI({ figure, lightbox: true })
+        : ''
 
       const elementBaseClass = 'q-lightbox-slides__element'
       const elementClasses = [
@@ -91,7 +92,7 @@ module.exports = function(eleventyConfig) {
           </div>
           <div class="q-figure-slides__slide-ui">
             ${captionElement}
-            ${annotationsUI({ figure, lightbox: true })}
+            ${annotationsElement}
           </div>
         </div>
       `
