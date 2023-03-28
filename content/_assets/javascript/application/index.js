@@ -190,7 +190,7 @@ function loadSearchData() {
 
 /**
  * Applies MLA format to date
- * 
+ *
  * @param  {Date}   date   javascript date object
  * @return {String}        MLA formatted date
  */
@@ -345,7 +345,7 @@ window.addEventListener('load', () => {
   scrollToHash(window.location.hash, 75, 'swing')
   const params = parseQueryParams()
   /**
-   * Canvas/Sequence Panel Setup
+   * Canvas Panel Setup
    */
   setUpUIEventHandlers()
   if (window.location.hash) goToFigureState({
