@@ -19,21 +19,25 @@ module.exports = function(eleventyConfig) {
 
   const { imageDir } = eleventyConfig.globalData.config.figures
 
-  return function(figure) {
+  return async function(figure) {
     const { 
       caption,
       credit,
       id,
+      isSequence,
       label
     } = figure
 
-    const annotationsElement = annotationsUI({ figure })
-    const labelElement = figureLabel({ id, label })
+    const annotationsElement = !isSequence
+      ? annotationsUI({ figure })
+      : ''
+    const labelElement = figureLabel({ id, label, isSequence })
 
     /**
      * Wrap image in modal link
      */
-    const imageElement = figureModalLink({ content: figureImageElement(figure), id })
+    let imageElement = await figureImageElement(figure, { interactive: false })
+    imageElement = figureModalLink({ content: imageElement, id })
 
     const captionElement = figureCaption({ caption, content: labelElement, credit })
 

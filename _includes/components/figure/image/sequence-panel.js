@@ -25,10 +25,10 @@ module.exports = function(eleventyConfig) {
       id,
       manifestId,
       margin='',
-      preset='responsive',
+      preset='static',
       startCanvas,
-      textEnabled='true',
-      textSelectionEnabled='true',
+      textEnabled='false',
+      textSelectionEnabled='false',
     } = data
 
     if (!manifestId) {
